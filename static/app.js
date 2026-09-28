@@ -401,21 +401,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
+
+            if (!resp.ok) {
+                const errData = await resp.json().catch(() => ({ detail: 'Comparison request failed' }));
+                throw new Error(errData.detail || errData.message || `Server Error (${resp.status})`);
+            }
+
             const result = await resp.json();
 
-            // Update UI Table Results
-            resSrc1Count.textContent = result.source1_count.toLocaleString();
-            resSrc2Count.textContent = result.source2_count.toLocaleString();
-            resMatchingVal.textContent = result.matching_count.toLocaleString();
+            // Safe Number Formatter to prevent undefined.toLocaleString() errors
+            const formatNum = (val) => (val !== undefined && val !== null && !isNaN(Number(val))) ? Number(val).toLocaleString() : '0';
 
-            if (result.matching_percentage !== undefined) {
+            // Update UI Table Results safely
+            resSrc1Count.textContent = formatNum(result.source1_count);
+            resSrc2Count.textContent = formatNum(result.source2_count);
+            resMatchingVal.textContent = formatNum(result.matching_count);
+
+            if (result.matching_percentage !== undefined && result.matching_percentage !== null && !isNaN(Number(result.matching_percentage))) {
                 resMatchingPct.textContent = `${Number(result.matching_percentage).toFixed(2)}%`;
             } else {
                 resMatchingPct.textContent = '0.00%';
             }
 
-            resOnlySrc1.textContent = result.only_source1.toLocaleString();
-            resOnlySrc2.textContent = result.only_source2.toLocaleString();
+            resOnlySrc1.textContent = formatNum(result.only_source1);
+            resOnlySrc2.textContent = formatNum(result.only_source2);
 
         } catch (err) {
             alert('Error running comparison: ' + err.message);
