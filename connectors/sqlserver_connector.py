@@ -61,6 +61,9 @@ class SqlServerConnector:
         if not conn:
             return ["Customers", "Orders", "Transactions", "Inventory"]
 
+        schema_parts = [p.strip("[] ") for p in schema.split(".")]
+        target_schema = schema_parts[-1] if schema_parts else schema
+
         cur = conn.cursor()
         try:
             cur.execute("""
@@ -68,7 +71,7 @@ class SqlServerConnector:
                 FROM information_schema.tables
                 WHERE table_schema = ?
                 ORDER BY table_name
-            """, schema)
+            """, target_schema)
             data = [r[0] for r in cur.fetchall()]
         finally:
             cur.close()
@@ -81,6 +84,9 @@ class SqlServerConnector:
         if not conn:
             return ["customer_id", "first_name", "last_name", "email", "loyalty_tier", "total_spend", "credit_score", "account_status"]
 
+        schema_parts = [p.strip("[] ") for p in schema.split(".")]
+        target_schema = schema_parts[-1] if schema_parts else schema
+
         cur = conn.cursor()
         try:
             cur.execute("""
@@ -89,7 +95,7 @@ class SqlServerConnector:
                 WHERE table_schema = ?
                 AND table_name = ?
                 ORDER BY ordinal_position
-            """, schema, table)
+            """, target_schema, table)
             data = [r[0] for r in cur.fetchall()]
         finally:
             cur.close()
@@ -101,6 +107,7 @@ class SqlServerConnector:
         """
         Optimized Chunked Fetching:
         Streams distinct records in 100k row batches to minimize memory overhead on huge datasets.
+        Fixes SQL Server 1038 alias error and schema splitting.
         """
         conn = SqlServerConnector.get_connection()
         if not conn:
@@ -117,12 +124,22 @@ class SqlServerConnector:
             else:
                 return {f"Val_{i}" for i in range(95)}
 
+        # Format schema components safely (e.g. 'db.dbo' -> '[db].[dbo]' or 'dbo' -> '[dbo]')
+        schema_parts = [p.strip("[] ") for p in str(schema).split(".")]
+        formatted_schema = ".".join(f"[{p}]" for p in schema_parts if p)
+
+        clean_table = str(table).strip("[] ")
+        clean_column = str(column).strip("[] ")
+
+        if not clean_column:
+            raise ValueError("Column name cannot be empty.")
+
         cursor = conn.cursor()
         query = f"""
         SELECT DISTINCT
-            CAST([{column}] AS VARCHAR(4000))
-        FROM [{schema}].[{table}]
-        WHERE [{column}] IS NOT NULL
+            CAST([{clean_column}] AS VARCHAR(4000)) AS val
+        FROM {formatted_schema}.[{clean_table}]
+        WHERE [{clean_column}] IS NOT NULL
         """
         cursor.execute(query)
 
