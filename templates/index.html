@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Comparison Tool</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Header Banner -->
+    <header class="app-header">
+        <h1 class="header-title">Data Comparison Tool</h1>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <div class="sources-wrapper">
+            
+            <!-- Source 1 Panel -->
+            <div class="source-column">
+                <h2 class="source-heading">Source 1</h2>
+
+                <div class="form-group">
+                    <label for="src1_type" class="form-label">Source Type</label>
+                    <select id="src1_type" class="form-select">
+                        <option value="Databricks" selected>Databricks</option>
+                        <option value="SQL Server">SQL Server</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="src1_schema" class="form-label">Schema</label>
+                    <select id="src1_schema" class="form-select">
+                        <option value="">Select Schema...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="src1_table" class="form-label">Table</label>
+                    <select id="src1_table" class="form-select" disabled>
+                        <option value="">Select Table...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="src1_column" class="form-label">Column</label>
+                    <select id="src1_column" class="form-select" disabled>
+                        <option value="">Select Column...</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Source 2 Panel -->
+            <div class="source-column">
+                <h2 class="source-heading">Source 2</h2>
+
+                <div class="form-group">
+                    <label for="src2_type" class="form-label">Source Type</label>
+                    <select id="src2_type" class="form-select">
+                        <option value="SQL Server" selected>SQL Server</option>
+                        <option value="Databricks">Databricks</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="src2_schema" class="form-label">Schema</label>
+                    <select id="src2_schema" class="form-select">
+                        <option value="">Select Schema...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="src2_table" class="form-label">Table</label>
+                    <select id="src2_table" class="form-select" disabled>
+                        <option value="">Select Table...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="src2_column" class="form-label">Column</label>
+                    <select id="src2_column" class="form-select" disabled>
+                        <option value="">Select Column...</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Action Button -->
+        <div class="action-wrapper">
+            <button id="compare_btn" class="btn-compare" disabled>Compare Data</button>
+        </div>
+
+        <!-- Comparison Results Card -->
+        <div class="results-card">
+            <h3 class="results-heading">Comparison Results</h3>
+            <div class="table-responsive">
+                <table class="results-table">
+                    <tbody>
+                        <tr>
+                            <td id="lbl_src1_unique" class="row-label">Databricks Unique Records</td>
+                            <td id="res_src1_count" class="row-value">0</td>
+                        </tr>
+                        <tr>
+                            <td id="lbl_src2_unique" class="row-label">SQL Server Unique Records</td>
+                            <td id="res_src2_count" class="row-value">0</td>
+                        </tr>
+                        <tr>
+                            <td class="row-label">Matching Unique Records</td>
+                            <td id="res_matching_val" class="row-value">0</td>
+                        </tr>
+                        <tr>
+                            <td class="row-label">Percentage of Match</td>
+                            <td id="res_matching_pct" class="row-value pct-highlight">0.00%</td>
+                        </tr>
+                        <tr>
+                            <td id="lbl_only_src1" class="row-label">Only In Databricks</td>
+                            <td id="res_only_src1" class="row-value">0</td>
+                        </tr>
+                        <tr>
+                            <td id="lbl_only_src2" class="row-label">Only In SQL Server</td>
+                            <td id="res_only_src2" class="row-value">0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

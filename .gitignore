@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.venv/
+.idea/
+.vscode/
+*.log
+node_modules/
+dist/
+package.json
+package-lock.json
+vite.config.js
+src/
+public/
+README.md
