@@ -21,10 +21,10 @@ class CompareService:
         s2_count = len(v2_set)
         matching_count = len(matching_values)
 
-        max_count = max(s1_count, s2_count) if max(s1_count, s2_count) > 0 else 1
-        matching_percentage = round((matching_count / max_count) * 100.0, 2)
+        # Match Percentage: (Matched Records / Source 1 Unique Records) * 100
+        matching_percentage = round((matching_count / s1_count) * 100.0, 2) if s1_count > 0 else 0.0
 
-        log_step("COMPARE_SERVICE_COMPLETE", f"Result: S1={s1_count}, S2={s2_count}, Matched={matching_count} ({matching_percentage}%), Only_S1={len(only_source1)}, Only_S2={len(only_source2)}")
+        log_step("COMPARE_SERVICE_COMPLETE", f"Result: S1={s1_count}, S2={s2_count}, Matched={matching_count} ({matching_percentage}% of Source 1), Only_S1={len(only_source1)}, Only_S2={len(only_source2)}")
 
         return {
             "source1_count": s1_count,
