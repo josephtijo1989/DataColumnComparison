@@ -11,7 +11,7 @@ logger.setLevel(logging.INFO)
 
 # Formatter
 formatter = logging.Formatter(
-    fmt="[%(asctime)s.%(msec)03d] [%(levelname)s] [%(filename)s:%(lineno)d] %(message)s",
+    fmt="[%(asctime)s.%(msecs)03d] [%(levelname)s] [%(filename)s:%(lineno)d] %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S"
 )
 
